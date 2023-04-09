@@ -1,5 +1,4 @@
-import {useState, useEffect} from 'react'
-import apiClient,{AxiosError} from '../services/api-client';
+import useData from './useData';
 
 export interface Platform{
   id: number;
@@ -16,28 +15,8 @@ export interface Game {
 
   }
   
-  interface FetchGameData {
-    count: number;
-    results: Game[];
-  }
 
-const useGames = ()=>{
-  const [games, setGames] = useState<Game[]>([]);
-  const [error, setError] = useState("");
-  const [isLoading, setIsLoading] = useState(false)
-
-  useEffect(() => {
-    setIsLoading(true)
-    apiClient
-      .get<FetchGameData>("/games")
-      .then((res) => {setGames(res.data.results); setIsLoading(false)})
-      .catch((err) => {
-        setError((err as AxiosError).message);
-        setIsLoading(false)
-      });
-  },[]);
-  return {games, error, isLoading}
-}
+const useGames = ()=> useData<Game>('/games')
 
 export default useGames;
 
